@@ -1,0 +1,66 @@
+function setColumnName() {
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = spreadsheet.getActiveSheet();
+  sheet.getRange(1, 1).setValue("timestamp");
+  sheet.getRange(1, 2).setValue("cid");
+  sheet.getRange(1, 3).setValue("nameTH");
+  sheet.getRange(1, 4).setValue("nameEN");
+  sheet.getRange(1, 5).setValue("birthDate");
+  sheet.getRange(1, 6).setValue("address");
+  sheet.getRange(1, 7).setValue("pictureTag");
+  sheet.getRange(1, 8).setValue("issuer");
+  sheet.getRange(1, 9).setValue("gender");
+  sheet.getRange(1, 10).setValue("issueDate");
+  sheet.getRange(1, 11).setValue("expireDate");
+}
+
+
+function doPost(request){
+  // Open Google Sheet using ID
+  var sheet = SpreadsheetApp.openById("<Your Sheet ID>");
+  sheet.setName("idkub");
+
+
+  var result = {"status": "SUCCESS"};
+  try{
+    setColumnName()
+
+    // Get all Parameters
+    var timestamp = request.parameter.timestamp;
+     var cid = request.parameter.cid;
+     var nameTH = request.parameter.nameTH;
+     var nameEN = request.parameter.nameEN;
+     var birthDate = request.parameter.birthDate;
+     var address = request.parameter.address;
+     var pictureTag = request.parameter.pictureTag;
+     var issuer = request.parameter.issuer;
+     var gender = request.parameter.gender;
+     var issueDate = request.parameter.issueDate;
+     var expireDate = request.parameter.expireDate;
+
+    // Append data on Google Sheet
+    var rowData = sheet.appendRow([timestamp, 
+                                    cid, 
+                                    nameTH,
+                                    nameEN,
+                                    birthDate,
+                                    address,
+                                    pictureTag,
+                                    issuer,
+                                    gender,
+                                    issueDate,
+                                    expireDate]);
+    // var rowData = sheet.appendRow(Object.values(request.parameter));
+    
+    
+
+  }catch(exc){
+    // If error occurs, throw exception
+    result = {"status": "FAILED", "message": exc};
+  }
+
+  // Return result
+  return ContentService
+  .createTextOutput(JSON.stringify(result))
+  .setMimeType(ContentService.MimeType.JSON);
+}
